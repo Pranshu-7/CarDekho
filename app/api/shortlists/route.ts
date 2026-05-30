@@ -75,8 +75,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ slug });
   } catch (err) {
     console.error("Error in /api/shortlists", err);
+    const message = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json(
-      { error: "Something went wrong while saving shortlist." },
+      { error: "Something went wrong while saving shortlist.", detail: message },
       { status: 500 }
     );
   }
