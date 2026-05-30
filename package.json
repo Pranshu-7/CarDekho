@@ -6,9 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/seed.ts",
+    "db:setup": "npx prisma db push && npm run seed",
+    "import:kaggle": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/import-kaggle.ts",
+    "check:cars": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/check-cars.ts"
   },
   "dependencies": {
+    "@prisma/client": "^5.15.0",
+    "csv-parse": "^6.2.1",
     "next": "16.2.6",
     "react": "19.2.4",
     "react-dom": "19.2.4"
@@ -20,7 +26,9 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
+    "prisma": "^5.15.0",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }
