@@ -1,139 +1,61 @@
-# Shortlist IQ
+**What did you build and why? What did you deliberately cut?**
+I built NextDrive, a car recommendation app that suggests cars based on a user’s real preferences: budget, safety, mileage, performance, and their affinity for specific brands. The focus is on how people actually shop for cars in India—most buyers, including me, start from “I trust these brands” and “this is my budget and use case,” not from raw specs. The system takes that natural preference input and turns it into scores to rank cars.
 
-Shortlist IQ is a full-stack car research web application that helps buyers go from “I don’t know what to buy” to a confident shortlist of cars.
+Deliberately, I did not build:
 
-## Tech stack
+Complex infrastructure (microservices, queues, etc.)
 
-- Next.js (App Router, TypeScript)
-- React 18
-- Prisma ORM
-- SQLite
-- Tailwind CSS
+Authentication or user accounts
 
-## Features
+A flashy, animated UI
 
-- Free-text preference input (brand, mileage, safety, budget, etc.)
-- Deterministic scoring engine over a small in-repo car dataset
-- Ranked recommendations with “Why this car?” explanations
-- Select and save shortlists with shareable URLs
-- SQLite + Prisma with seed script; no external services required
-- Optional Kaggle CSV import for richer datasets (not required for evaluation)
+Any heavy ML/AI models or LLM integration in the core flow
 
-## Prerequisites
+The goal was to ship a clean, end‑to‑end recommendation flow that is easy to understand and review, rather than an over‑engineered system.
 
-- Node.js 18+ installed on your machine
-- npm (comes with Node)
+**What’s your tech stack and why did you pick it?**
+Tech stack:
 
-## How to run locally (macOS)
+Next.js (App Router) + React for the frontend and backend in a single codebase
 
-1. **Clone or create the project**
+TypeScript for type safety and clearer intent
 
-   ```bash
-   git clone <your-repo-url> shortlist-iq
-   cd shortlist-iq
-   ```
+Prisma + SQLite/Postgres for modelling and querying the car data
 
-   Or if you created it locally already, just `cd` into the folder.
+Tailwind CSS for quick, consistent styling
 
-2. **Install dependencies**
+Vercel for deployment
 
-   ```bash
-   npm install
-   ```
+I chose this stack because it is one of the fastest ways to ship a real full‑stack app with server routes, typed models, and a good DX. I had not built this exact architecture before, but the assessment allowed using AI tools, so I leaned on them to move quickly while still respecting the constraints and keeping the core logic understandable.
 
-3. **Configure environment**
+**What did you delegate to AI tools vs. do manually? Where did the tools help most? Where did they get in the way?**
+AI tools were involved in almost every part of the project:
 
-   Ensure a `.env` file exists in the project root with:
+Helped most with:
 
-   ```env
-   DATABASE_URL="file:./prisma/dev.db"
-   ```
+Exploring tech stack options and folder structure
 
-4. **Set up database schema and seed data**
+Drafting initial versions of components, Prisma schema, and utility functions
 
-   ```bash
-   npx prisma generate
-   npm run db:setup
-   ```
+Iterating on copy (labels, explanations) and README text
 
-   This will:
+Debugging smaller errors and wiring things together faster
 
-   - Create/update the SQLite schema (`Car` and `Shortlist` tables).
-   - Seed ~20 sample cars into the `Car` table.
+Done more manually / with more control:
 
-5. **Run the dev server**
+Defining the recommendation logic (which signals matter, how to weight them, how to parse budgets and brand preferences)
 
-   ```bash
-   npm run dev
-   ```
+Deciding the user flow and what to show on the main screen and results
 
-6. **Open the app**
+Simplifying and cleaning up AI‑generated code so it stays within the assignment’s scope
 
-   Go to:
+**If you had another 4 hours, what would you add?**
+With another 4 hours, I would:
 
-   - http://localhost:3000
+Add an optional LLM‑based intent parser as a fallback to better understand nuanced, natural language queries.
 
-## Usage
+Experiment with simple ML/AI scoring (e.g., weighting based on feedback or simulated user data).
 
-1. On the home page, describe your preferences (brand, safety, mileage, budget).
-2. Optionally set min and max budget.
-3. Click **“Get my shortlist”**.
-4. Review the recommended cars:
-   - Make, model, price, mileage, safety rating, power, fuel, transmission.
-   - One-line explanation “Why this car”.
-5. Tick the checkboxes for cars to add to your shortlist.
-6. Click **“Save shortlist”**:
-   - You will be redirected to `/shortlist/[slug]`.
-   - The URL is shareable and shows your original query and selected cars.
+Polish the UI further (more responsive layout, better empty states, smoother interactions, maybe basic filters on the results).
 
-## Optional: Import a Kaggle dataset
-
-This is **not required** to run the app or for evaluation. It’s just an enhancement.
-
-1. Place your Kaggle CSV at:
-
-   ```text
-   data/cars_kaggle.csv
-   ```
-
-2. Adjust `scripts/import-kaggle.ts` to match your CSV column names if needed.
-3. Run:
-
-   ```bash
-   npm run import:kaggle
-   ```
-
-   This will clear the existing cars and shortlists and repopulate the `Car` table from the CSV.
-
-To reset back to the default small dataset, run:
-
-```bash
-npm run seed
-```
-
-## Optional: LLM integration
-
-The app is designed to work with a deterministic parser by default. If you later add an LLM endpoint:
-
-- Add to `.env`:
-
-  ```env
-  LLM_API_KEY="your-api-key"
-  LLM_API_URL="https://your-llm-endpoint"
-  ```
-
-- Implement the LLM call inside `lib/recommendation/parseIntent.ts` in `parseIntentWithLLM`.
-
-If the LLM call fails or is not configured, the deterministic parser is always used.
-
-## Deploying to Vercel (optional)
-
-1. Push this repository to GitHub.
-2. In the Vercel dashboard:
-   - Import the repo.
-   - Set environment variables:
-     - `DATABASE_URL="file:./prisma/dev.db"`
-   - Optionally `LLM_API_KEY` and `LLM_API_URL`.
-3. Vercel will run `npm install`, `npm run build`, and then host the app.
-
-For local assessment, only steps up to `npm run dev` are needed.
+These would make the app feel smarter and more polished without changing the core structure.
