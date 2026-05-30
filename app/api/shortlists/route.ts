@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ensureSchema } from "@/lib/db/ensureSchema";
+import { seedCarsData } from "@/lib/db/seedCars";
 
 function generateSlug(): string {
   return Math.random().toString(36).substring(2, 10);
@@ -28,24 +29,11 @@ export async function POST(req: NextRequest) {
 
     // Ensure Car table has data in this instance too
     const existingAnyCar = await prisma.car.findFirst();
-    if (!existingAnyCar) {
-      await prisma.car.createMany({
-        data: [
-          {
-            make: "Maruti",
-            model: "Swift",
-            bodyType: "Hatchback",
-            price: 700000,
-            mileage: 21.0,
-            safetyRating: 3.0,
-            power: 89,
-            fuelType: "Petrol",
-            transmission: "Manual"
-          }
-          // For shortlist, seeding one is enough; recommend API seeds full set
-        ]
-      });
-    }
+if (!existingAnyCar) {
+  await prisma.car.createMany({
+    data: seedCarsData
+  });
+}
 
     const numericIds = carIds
       .map((id) => {
