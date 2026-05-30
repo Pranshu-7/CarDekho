@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { ensureSchema } from "@/lib/db/ensureSchema";
 
 function generateSlug(): string {
   return Math.random().toString(36).substring(2, 10);
@@ -7,6 +8,7 @@ function generateSlug(): string {
 
 export async function POST(req: NextRequest) {
   try {
+    await ensureSchema();
     const body = await req.json().catch(() => null);
     if (!body || typeof body.query !== "string" || !Array.isArray(body.carIds)) {
       return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
