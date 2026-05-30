@@ -1,3 +1,4 @@
+// app/api/shortlists/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ensureSchema } from "@/lib/db/ensureSchema";
@@ -9,6 +10,7 @@ function generateSlug(): string {
 export async function POST(req: NextRequest) {
   try {
     await ensureSchema();
+
     const body = await req.json().catch(() => null);
     if (!body || typeof body.query !== "string" || !Array.isArray(body.carIds)) {
       return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
@@ -24,6 +26,27 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Ensure Car table has data in this instance too
+    const existingAnyCar = await prisma.car.findFirst();
+    if (!existingAnyCar) {
+      await prisma.car.createMany({
+        data: [
+          {
+            make: "Maruti",
+            model: "Swift",
+            bodyType: "Hatchback",
+            price: 700000,
+            mileage: 21.0,
+            safetyRating: 3.0,
+            power: 89,
+            fuelType: "Petrol",
+            transmission: "Manual"
+          }
+          // For shortlist, seeding one is enough; recommend API seeds full set
+        ]
+      });
+    }
+
     const numericIds = carIds
       .map((id) => {
         if (typeof id === "number") return id;
@@ -33,7 +56,10 @@ export async function POST(req: NextRequest) {
       .filter((id): id is number => id !== null);
 
     if (numericIds.length === 0) {
-      return NextResponse.json({ error: "At least one valid car ID is required." }, { status: 400 });
+      return NextResponse.json(
+        { error: "At least one valid car ID is required." },
+        { status: 400 }
+      );
     }
 
     const existingCars = await prisma.car.findMany({
