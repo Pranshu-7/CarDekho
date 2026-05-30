@@ -3,6 +3,40 @@ import { prisma } from "@/lib/prisma";
 import { getIntent } from "@/lib/recommendation/parseIntent";
 import { scoreCars } from "@/lib/recommendation/scoring";
 
+async function ensureSchema() {
+  // Create Car table if it doesn't exist
+  await prisma.$executeRawUnsafe(`
+    CREATE TABLE IF NOT EXISTS "Car" (
+      "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      "make" TEXT NOT NULL,
+      "model" TEXT NOT NULL,
+      "bodyType" TEXT,
+      "price" INTEGER NOT NULL,
+      "mileage" REAL,
+      "safetyRating" REAL,
+      "power" INTEGER,
+      "fuelType" TEXT,
+      "transmission" TEXT
+    );
+  `);
+
+  // Create Shortlist table if it doesn't exist
+  await prisma.$executeRawUnsafe(`
+    CREATE TABLE IF NOT EXISTS "Shortlist" (
+      "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      "slug" TEXT NOT NULL,
+      "query" TEXT NOT NULL,
+      "carIds" TEXT NOT NULL,
+      "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+
+  // Unique index on slug
+  await prisma.$executeRawUnsafe(`
+    CREATE UNIQUE INDEX IF NOT EXISTS "Shortlist_slug_key" ON "Shortlist"("slug");
+  `);
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => null);
@@ -27,6 +61,7 @@ export async function POST(req: NextRequest) {
       intent.maxBudget = body.maxBudget;
     }
 
+    await ensureSchema();
     let cars = await prisma.car.findMany();
 
     // Optional: auto-seed minimal data in production if DB is empty
