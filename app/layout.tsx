@@ -1,9 +1,11 @@
-import "./globals.css";
+// app/layout.tsx
 import type { Metadata } from "next";
+import "./globals.css";
+import { Navbar } from "@/components/Navbar";
 
 export const metadata: Metadata = {
-  title: "Shortlist IQ",
-  description: "Car research platform to build a confident shortlist"
+  title: "NextDrive",
+  description: "NextDrive – Find the right car for your life"
 };
 
 export default function RootLayout({
@@ -13,8 +15,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen">
-        <div className="max-w-5xl mx-auto px-4 py-6">{children}</div>
+      <body>
+        <Navbar />
+        <main className="max-w-4xl mx-auto px-4 py-6">
+          {children}
+        </main>
       </body>
     </html>
   );
