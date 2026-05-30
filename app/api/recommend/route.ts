@@ -273,9 +273,12 @@ export async function POST(req: NextRequest) {
     });
   } catch (err) {
     console.error("Error in /api/recommend", err);
-    return NextResponse.json(
-      { error: "Something went wrong while generating recommendations." },
-      { status: 500 }
+  // TEMP: expose error message in response for debugging on Vercel
+  const message =
+    err instanceof Error ? err.message : "Unknown error";
+  return NextResponse.json(
+    { error: "Something went wrong while generating recommendations.", detail: message },
+    { status: 500 }
     );
   }
 }
