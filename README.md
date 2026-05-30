@@ -31,6 +31,10 @@ The goal was to ship a clean, end‑to‑end recommendation flow that is easy to
 
 I chose this stack because it is one of the fastest ways to ship a real full‑stack app with server routes, typed models, and a good developer experience. I had not built this exact architecture before, but the assessment allowed using AI tools, so I leaned on them to move quickly while still respecting the constraints and keeping the core logic understandable.
 
+### Database & Deployment Notes
+
+- The first version used SQLite locally. On Vercel’s serverless runtime, SQLite cannot reliably open a local `.db` file, which led to `Error code 14: Unable to open the database file`.
+- The app now uses a hosted Postgres database (via Vercel Postgres) and Prisma.
 ---
 
 ## What was delegated to AI vs. done manually?
