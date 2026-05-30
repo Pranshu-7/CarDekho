@@ -136,7 +136,7 @@ window.location.href = `/shortlist/${data.slug}`;
   return (
     <main>
       <header className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Shortlist IQ</h1>
+        <h1 className="text-3xl font-bold text-slate-900">NextDrive</h1>
         <p className="text-slate-600 mt-1">
           Go from “I don&apos;t know what to buy” to a confident shortlist of cars.
         </p>
