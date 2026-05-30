@@ -7,10 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/seed.ts",
-    "db:setup": "npx prisma db push && npm run seed",
-    "import:kaggle": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/import-kaggle.ts",
-    "check:cars": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/check-cars.ts"
+    "prisma:generate": "prisma generate",
+  "prisma:push": "prisma db push",
+  "seed": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/seed.ts",
+  "db:setup": "npm run prisma:generate && npm run prisma:push && npm run seed",
+  "import:kaggle": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/import-kaggle.ts",
+  "vercel-build": "npm run prisma:generate && next build"
   },
   "dependencies": {
     "@prisma/client": "^5.15.0",
