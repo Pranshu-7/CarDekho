@@ -65,3 +65,6 @@ With another 4 hours, I would:
 - Polish the **UI** further (more responsive layout, better empty states, smoother interactions, and basic result filters).
 
 These additions would make the app feel smarter and more polished without changing the core structure.
+
+
+## THIS IS A TEST COMMIT
